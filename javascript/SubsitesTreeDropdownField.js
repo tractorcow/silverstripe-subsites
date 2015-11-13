@@ -1,23 +1,45 @@
 (function($) {
 	$.entwine('ss', function($) {
-		$('.TreeDropdownField').entwine({
+		$("select[name='CopyContentFromID_SubsiteID']").entwine({
+			onchange: function() {
+				$('.SubsitesTreeDropdownField').refresh();
+			}
+		});
+		
+		$('.SubsitesTreeDropdownField').entwine({
+			
+			/**
+			 * Get the subsite id selector html dom entity
+			 * 
+			 * @returns {object}
+			 */
+			subsiteSelector: function() {
+				return $("select[name='CopyContentFromID_SubsiteID']");
+			},
+			
+			/**
+			 * Update the linked page selector with the current subsite id
+			 */
+			refresh: function() {
+				this.loadTree();
+			},
+			
+			/**
+			 * Get subsite id
+			 * 
+			 * @returns {Integer}
+			 */
 			subsiteID: function() {
-				var subsiteSel = $('#CopyContentFromID_SubsiteID select')[0];
-				if(!subsiteSel) return;
-				
-				subsiteSel.onchange = (function() {
-					this.createTreeNode(true);
-					this.ajaxGetTree((function(response) {
-						this.newTreeReady(response, true);
-						this.updateTreeLabel();
-					}).bind(this));
-				}).bind(this);
-				return subsiteSel.options[subsiteSel.selectedIndex].value;
+				return this
+					.subsiteSelector()
+					.first()
+					.val();
 			},
 	
 			getRequestParams: function() {
-				var name = this.find(':input:hidden').attr('name'), obj = {};
-				obj[name + '_SubsiteID'] = parseInt(this.subsiteID());
+				var name = this.find(':input:hidden').attr('name'),
+					obj = {};
+				obj[name + '_SubsiteID'] = this.subsiteID();
 				return obj;
 			}
 		});

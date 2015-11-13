@@ -43,10 +43,6 @@ class SubsitesVirtualPage extends VirtualPage {
 			"MenuTitle"
 		);
 		
-		if(Controller::has_curr() && Controller::curr()->getRequest()) {
-			$subsiteID = Controller::curr()->getRequest()->postVar('CopyContentFromID_SubsiteID');
-			$pageSelectionField->setSubsiteID($subsiteID);
-		}
 		$fields->replaceField('CopyContentFromID', $pageSelectionField);
 		
 		// Create links back to the original object in the CMS
